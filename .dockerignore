@@ -1,0 +1,12 @@
+# Ignora casi lo mismo que .gitignore
+.git/
+.gitignore
+node_modules/
+dist/
+.env
+.env.local
+
+# Archivos de desarrollo y testing
+coverage/
+*.md
+*.log
