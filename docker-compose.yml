@@ -1,14 +1,16 @@
-version: '3.8'
+# version: '3.9'
+
 services:
   db:
-    image: postgres:13
+    image: postgres:15
+    restart: always
     container_name: POSTGRES_DB
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
     ports:
-      - "{DB_PORT}:5432"
+      - "${DB_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -27,9 +29,10 @@ services:
       - "3000:3000"
     environment:
       DATABASE_URL: ${DATABASE_URL}
-  volumes:
-    - .:/app
-    - /app/node_modules
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: sh -c "npx prisma migrate deploy && npm run start"
 
 volumes:
   postgres_data:
