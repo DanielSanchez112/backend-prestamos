@@ -14,8 +14,181 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User{
-  id    Int     @id @default(autoincrement())
-  name  String
-  email String  @unique
+model Ciudades {
+  id           Int         @id @map("ID_CIUDAD")
+  idMunicipio  Int?        @map("ID_MUNICIPIO")
+  nombre       String?     @map("NOMBRE")
+  municipio    Municipios? @relation(fields: [idMunicipio], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  localidades  Localidades[]
+
+  @@map("CIUDADES")
+}
+
+model Clientes {
+  id                  Int        @id @map("ID_CLIENTE")
+  idDireccion         Int?       @map("ID_DIRECCION")
+  idUsuario           Int?       @map("ID_USUARIO")
+  nombre              String?    @map("NOMBRE")
+  apellidoPaterno     String?    @map("APELLIDO_PATERNO")
+  apellidoMaterno     String?    @map("APELLIDO_MATERNO")
+  rfc                 String?    @map("RFC")
+  ine                 String?    @map("INE")
+  comprobanteDomicilio String?   @map("COMPROBANTE_DOMICILIO")
+  curp                String?    @map("CURP")
+  fechaNacimiento     DateTime?  @map("FECHA_NACIMIENTO")
+  estatus             Boolean?   @map("ESTATUS")
+  direccion           Direcciones? @relation(fields: [idDireccion], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  usuario             Usuarios?    @relation(fields: [idUsuario], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  prestamos           Prestamos[]
+
+  @@map("CLIENTES")
+}
+
+model Contratos {
+  id          Int       @id @map("ID_CONTRATO")
+  idPrestamos Int?      @map("ID_PRESTAMOS")
+  url         String?   @map("URL")
+  status      Boolean?  @map("STATUS")
+  prestamo    Prestamos? @relation(fields: [idPrestamos], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("CONTRATOS")
+}
+
+model Direcciones {
+  id             Int           @id @map("ID_DIRECCION")
+  idLocalidad    Int?          @map("ID_LOCALIDAD")
+  caller         String?       @map("CALLER")
+  codigoPostal   String?       @map("CODIGO_POSTAL")
+  numeroExterior String?       @map("NUMERO_EXTERIOR")
+  numeroInterior String?       @map("NUMERO_INTERIOR")
+  localidad      Localidades?  @relation(fields: [idLocalidad], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  clientes       Clientes[]
+
+  @@map("DIRECCIONES")
+}
+
+model Estados {
+  id        Int         @id @map("ID_ESTADO")
+  nombre    String?     @map("NOMBRE")
+  municipios Municipios[]
+
+  @@map("ESTADOS")
+}
+
+model Localidades {
+  id         Int         @id @map("ID_LOCALIDAD")
+  idCiudad   Int?        @map("ID_CIUDAD")
+  nombre     String?     @map("NOMBRE")
+  ciudad     Ciudades?   @relation(fields: [idCiudad], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  direcciones Direcciones[]
+
+  @@map("LOCALIDADES")
+}
+
+model MetodoPago {
+  id      Int      @id @map("ID_METODO_PAGO")
+  nombre  String?  @map("NOMBRE")
+  status  Boolean? @map("STATUS")
+  pagos   Pagos[]
+
+  @@map("METODO_PAGO")
+}
+
+model Municipios {
+  id       Int       @id @map("ID_MUNICIPIO")
+  idEstado Int?      @map("ID_ESTADO")
+  nombre   String?   @map("NOMBRE")
+  estado   Estados?  @relation(fields: [idEstado], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  ciudades Ciudades[]
+
+  @@map("MUNICIPIOS")
+}
+
+model Pagos {
+  id           Int         @id @map("ID_PAGO")
+  idPrestamos  Int?        @map("ID_PRESTAMOS")
+  idMetodoPago Int?        @map("ID_METODO_PAGO")
+  monto        Float?      @map("MONTO")
+  fechaPago    DateTime?   @map("FECHA_PAGO")
+  status       Boolean?    @map("STATUS")
+  prestamo     Prestamos?  @relation(fields: [idPrestamos], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  metodoPago   MetodoPago? @relation(fields: [idMetodoPago], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("PAGOS")
+}
+
+model Permisos {
+  id           Int          @id @map("ID_PERMISO")
+  idRolPermiso Int?         @map("ID_ROL_PERMISO")
+  nombre       String?      @map("NOMBRE")
+  status       Boolean?     @map("STATUS")
+  rolPermiso   RolPermisos? @relation(fields: [idRolPermiso], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("PERMISOS")
+}
+
+model Prestamos {
+  id           Int        @id @map("ID_PRESTAMO")
+  idCliente    Int?       @map("ID_CLIENTE")
+  idUsuario    Int?       @map("ID_USUARIO")
+  monto        Float?     @map("MONTO")
+  fechaInicio  DateTime?  @map("FECHA_INICIO")
+  intervaloPago DateTime? @map("INTERVALO_PAGO")
+  pagoMinimo   Float?     @map("PAGO_MINIMO")
+  fechaFin     DateTime?  @map("FECHA_FIN")
+  tasa         Float?     @map("TASA")
+  status       Boolean?   @map("STATUS")
+  cliente      Clientes?  @relation(fields: [idCliente], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  usuario      Usuarios?  @relation(fields: [idUsuario], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  contratos    Contratos[]
+  pagos        Pagos[]
+
+  @@map("PRESTAMOS")
+}
+
+model Roles {
+  id           Int           @id @map("ID_ROL")
+  idRolUsuario Int?          @map("ID_ROL_USUARIO")
+  nombre       String?       @map("NOMBRE")
+  status       String?       @map("STATUS")
+  rolUsuario   RolUsuario?   @relation(fields: [idRolUsuario], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  rolPermisos  RolPermisos[]
+
+  @@map("ROLES")
+}
+
+model RolPermisos {
+  id        Int        @id @map("ID_ROL_PERMISO")
+  idRol     Int?       @map("ID_ROL")
+  status    String?    @map("STATUS")
+  rol       Roles?     @relation(fields: [idRol], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  permisos  Permisos[]
+
+  @@map("ROL_PERMISOS")
+}
+
+model RolUsuario {
+  id        Int       @id @map("ID_ROL_USUARIO")
+  idUsuario Int?      @map("ID_USUARIO")
+  status    Boolean?  @map("STATUS")
+  usuario   Usuarios? @relation(fields: [idUsuario], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  roles     Roles[]
+
+  @@map("ROL_USUARIO")
+}
+
+model Usuarios {
+  id                 Int          @id @map("ID_USUARIO")
+  nombre             String?      @map("NOMBRE")
+  contrasena         String?      @map("CONTRASENA")
+  password           String?      @map("PASSWORD")
+  correo             String?      @map("CORREO")
+  fechaCreacion      DateTime?    @map("FECHA_CREACION")
+  fechaActualizacion DateTime?    @map("FECHA_ACTUALIZACION")
+  estatus            Boolean?     @map("ESTATUS")
+  clientes           Clientes[]
+  prestamos          Prestamos[]
+  rolUsuario         RolUsuario[]
+
+  @@map("USUARIOS")
 }
