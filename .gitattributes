@@ -1,0 +1,23 @@
+# Asegura el fin de línea correcto según el sistema
+* text=auto
+
+# Archivos específicos con configuración LF
+*.ts text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+
+# Imágenes y binarios: sin conversión de EOL
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.svg binary
+*.woff binary
+*.woff2 binary
+*.ttf binary

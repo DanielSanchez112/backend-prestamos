@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
+  //output   = "../generated/prisma"
 }
 
 datasource db {
@@ -15,7 +15,7 @@ datasource db {
 }
 
 model Ciudades {
-  id           Int         @id @map("ID_CIUDAD")
+  id           Int         @id @default(autoincrement()) @map("ID_CIUDAD")
   idMunicipio  Int?        @map("ID_MUNICIPIO")
   nombre       String?     @map("NOMBRE")
   municipio    Municipios? @relation(fields: [idMunicipio], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -25,7 +25,7 @@ model Ciudades {
 }
 
 model Clientes {
-  id                  Int        @id @map("ID_CLIENTE")
+  id                  Int        @id @default(autoincrement()) @map("ID_CLIENTE")
   idDireccion         Int?       @map("ID_DIRECCION")
   idUsuario           Int?       @map("ID_USUARIO")
   nombre              String?    @map("NOMBRE")
@@ -45,7 +45,7 @@ model Clientes {
 }
 
 model Contratos {
-  id          Int       @id @map("ID_CONTRATO")
+  id          Int       @id @default(autoincrement()) @map("ID_CONTRATO")
   idPrestamos Int?      @map("ID_PRESTAMOS")
   url         String?   @map("URL")
   status      Boolean?  @map("STATUS")
@@ -55,7 +55,7 @@ model Contratos {
 }
 
 model Direcciones {
-  id             Int           @id @map("ID_DIRECCION")
+  id             Int           @id @default(autoincrement()) @map("ID_DIRECCION")
   idLocalidad    Int?          @map("ID_LOCALIDAD")
   caller         String?       @map("CALLER")
   codigoPostal   String?       @map("CODIGO_POSTAL")
@@ -68,7 +68,7 @@ model Direcciones {
 }
 
 model Estados {
-  id        Int         @id @map("ID_ESTADO")
+  id        Int         @id @default(autoincrement()) @map("ID_ESTADO")
   nombre    String?     @map("NOMBRE")
   municipios Municipios[]
 
@@ -76,7 +76,7 @@ model Estados {
 }
 
 model Localidades {
-  id         Int         @id @map("ID_LOCALIDAD")
+  id         Int         @id @default(autoincrement()) @map("ID_LOCALIDAD")
   idCiudad   Int?        @map("ID_CIUDAD")
   nombre     String?     @map("NOMBRE")
   ciudad     Ciudades?   @relation(fields: [idCiudad], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -86,7 +86,7 @@ model Localidades {
 }
 
 model MetodoPago {
-  id      Int      @id @map("ID_METODO_PAGO")
+  id      Int      @id @default(autoincrement()) @map("ID_METODO_PAGO")
   nombre  String?  @map("NOMBRE")
   status  Boolean? @map("STATUS")
   pagos   Pagos[]
@@ -95,7 +95,7 @@ model MetodoPago {
 }
 
 model Municipios {
-  id       Int       @id @map("ID_MUNICIPIO")
+  id       Int       @id @default(autoincrement()) @map("ID_MUNICIPIO")
   idEstado Int?      @map("ID_ESTADO")
   nombre   String?   @map("NOMBRE")
   estado   Estados?  @relation(fields: [idEstado], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -105,7 +105,7 @@ model Municipios {
 }
 
 model Pagos {
-  id           Int         @id @map("ID_PAGO")
+  id           Int         @id @default(autoincrement()) @map("ID_PAGO")
   idPrestamos  Int?        @map("ID_PRESTAMOS")
   idMetodoPago Int?        @map("ID_METODO_PAGO")
   monto        Float?      @map("MONTO")
@@ -118,7 +118,7 @@ model Pagos {
 }
 
 model Permisos {
-  id           Int          @id @map("ID_PERMISO")
+  id           Int          @id @default(autoincrement()) @map("ID_PERMISO")
   idRolPermiso Int?         @map("ID_ROL_PERMISO")
   nombre       String?      @map("NOMBRE")
   status       Boolean?     @map("STATUS")
@@ -128,7 +128,7 @@ model Permisos {
 }
 
 model Prestamos {
-  id           Int        @id @map("ID_PRESTAMO")
+  id           Int        @id @default(autoincrement()) @map("ID_PRESTAMO")
   idCliente    Int?       @map("ID_CLIENTE")
   idUsuario    Int?       @map("ID_USUARIO")
   monto        Float?     @map("MONTO")
@@ -147,7 +147,7 @@ model Prestamos {
 }
 
 model Roles {
-  id           Int           @id @map("ID_ROL")
+  id           Int           @id @default(autoincrement()) @map("ID_ROL")
   idRolUsuario Int?          @map("ID_ROL_USUARIO")
   nombre       String?       @map("NOMBRE")
   status       String?       @map("STATUS")
@@ -158,7 +158,7 @@ model Roles {
 }
 
 model RolPermisos {
-  id        Int        @id @map("ID_ROL_PERMISO")
+  id        Int        @id @default(autoincrement()) @map("ID_ROL_PERMISO")
   idRol     Int?       @map("ID_ROL")
   status    String?    @map("STATUS")
   rol       Roles?     @relation(fields: [idRol], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -168,7 +168,7 @@ model RolPermisos {
 }
 
 model RolUsuario {
-  id        Int       @id @map("ID_ROL_USUARIO")
+  id        Int       @id @default(autoincrement()) @map("ID_ROL_USUARIO")
   idUsuario Int?      @map("ID_USUARIO")
   status    Boolean?  @map("STATUS")
   usuario   Usuarios? @relation(fields: [idUsuario], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -178,10 +178,9 @@ model RolUsuario {
 }
 
 model Usuarios {
-  id                 Int          @id @map("ID_USUARIO")
+  id                 Int          @id @default(autoincrement()) @map("ID_USUARIO")
   nombre             String?      @map("NOMBRE")
   contrasena         String?      @map("CONTRASENA")
-  password           String?      @map("PASSWORD")
   correo             String?      @map("CORREO")
   fechaCreacion      DateTime?    @map("FECHA_CREACION")
   fechaActualizacion DateTime?    @map("FECHA_ACTUALIZACION")
