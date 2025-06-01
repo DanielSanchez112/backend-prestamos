@@ -2,13 +2,16 @@
 
 services:
   db:
-    image: postgres:15
+    image: postgres:15-alpine
     restart: always
     container_name: POSTGRES_DB
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
+      PGUSER: ${DB_USER}
+      PGPASSWORD: ${DB_PASSWORD}
+      PGDATABASE: ${DB_NAME}
     ports:
       - "${DB_PORT}:5432"
     volumes:
@@ -32,7 +35,12 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-    command: sh -c "npx prisma migrate deploy && npm run start"
+    command: sh -c "npx prisma migrate deploy && npm run start:dev"
 
 volumes:
   postgres_data:
+    driver: local
+
+networks:
+  nestjs-network:
+    driver: bridge
