@@ -9,16 +9,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     
     constructor(
         //UsuarioRepository o db
-        configService: ConfigService,    
+        configService: ConfigService,
     ) {
         super({
-            secretOrKey: configService.get('JWT_SECRET'),
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+            secretOrKey: configService.get('JWT_SECRET') || 'default',
+            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken()
         })
     }
 
     async validate(payload: JwtPayload) {
-
         const { id } = payload;
 
         // ! Obtener usuario de la db
