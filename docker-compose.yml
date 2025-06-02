@@ -1,46 +1,46 @@
 # version: '3.9'
 
 services:
-  db:
-    image: postgres:15-alpine
-    restart: always
-    container_name: POSTGRES_DB
-    environment:
-      POSTGRES_USER: ${DB_USER}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
-      PGUSER: ${DB_USER}
-      PGPASSWORD: ${DB_PASSWORD}
-      PGDATABASE: ${DB_NAME}
-    ports:
-      - "${DB_PORT}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
+    db:
+        image: postgres:15-alpine
+        restart: always
+        container_name: POSTGRES_DB
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            POSTGRES_DB: ${DB_NAME}
+            PGUSER: ${DB_USER}
+            PGPASSWORD: ${DB_PASSWORD}
+            PGDATABASE: ${DB_NAME}
+        ports:
+            - '${DB_PORT}:5432'
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+        healthcheck:
+            test: ['CMD-SHELL', 'pg_isready -U ${DB_USER} -d ${DB_NAME}']
+            interval: 5s
+            timeout: 5s
+            retries: 5
 
-  app:
-    build: .
-    container_name: nestjs-prestamos
-    depends_on:
-      db:
-        condition: service_healthy
-    ports:
-      - "3000:3000"
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-    volumes:
-      - .:/app
-      - /app/node_modules
-    command: sh -c "npx prisma migrate deploy && npm run start:dev"
+    app:
+        build: .
+        container_name: nestjs-prestamos
+        depends_on:
+            db:
+                condition: service_healthy
+        ports:
+            - '3000:3000'
+        environment:
+            DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?schema=public
+        volumes:
+            - .:/app
+            - /app/node_modules
+        command: sh -c "npx prisma migrate deploy && npm run start:dev"
 
 volumes:
-  postgres_data:
-    driver: local
+    postgres_data:
+        driver: local
 
 networks:
-  nestjs-network:
-    driver: bridge
+    nestjs-network:
+        driver: bridge

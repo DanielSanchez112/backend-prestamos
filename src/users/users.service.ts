@@ -5,11 +5,15 @@ import { PrismaService } from 'src/prisma.service'
 import * as bcrypt from 'bcrypt';
 import { ResourceNotFoundException } from 'src/common/exceptions/custom.exceptions';
 import { Usuarios } from '@prisma/client';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
 	readonly salt = 12
-	constructor(private prisma: PrismaService){}
+	constructor(
+		private prisma: PrismaService,
+		private readonly configService: ConfigService
+	){}
 
 	async create(createUserDto: CreateUserDto): Promise<Usuarios> {
 		const existingUserEmail = await this.prisma.usuarios.findFirst({
@@ -22,7 +26,7 @@ export class UsersService {
 		if(existingUserEmail || exisitinUserName){
 			throw new ConflictException(`Ya existe un usuario con el correo ${createUserDto.correo} o el nombre ${createUserDto.nombre}`)
 		}
-		const passHash = await bcrypt.hash(createUserDto.contrasena, this.salt)
+		const passHash = await bcrypt.hash(createUserDto.contrasena, +this.configService.get('SALT'));
 		const {contrasena, ...rest} = createUserDto
 
 		return this.prisma.usuarios.create({
@@ -127,6 +131,17 @@ export class UsersService {
 		return await this.prisma.usuarios.delete({
 			where: { id: id}
 		})
+	}
+
+	async findByEmail(email: string) {
+		const user = await this.prisma.usuarios.findFirst({
+			where: { correo: email}
+		})
+
+		if (!user)
+			throw new ResourceNotFoundException(`No se encontró un usuario con el correo ${email}`);
+
+		return user;
 	}
 
 }
