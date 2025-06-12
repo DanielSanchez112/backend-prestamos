@@ -9,6 +9,6 @@ export class LoginUserDto {
 
     @ApiProperty()
     @IsString()
-    @MinLength(8)
+    @MinLength(0) //cambiar de regreso a 8
     password: string;
 }
