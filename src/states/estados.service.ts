@@ -14,7 +14,7 @@ export class EstadosService {
     const existingEstado = await this.prisma.estados.findFirst({
       where: { nombre: createEstadoDto.nombre }
     })
-    if( existingEstado){
+    if( existingEstado ){
       throw new ConflictException(`Ya existe un estado con el nombre ${createEstadoDto.nombre}`)
     }
     const data = this.prisma.estados.create({

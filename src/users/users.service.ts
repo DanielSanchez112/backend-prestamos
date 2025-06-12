@@ -90,16 +90,18 @@ export class UsersService {
 		})
 		if(!existingUser){
 			throw new ResourceNotFoundException(`No se encontró un usuario con el id ${id}`);
-		}
-		const data = await this.prisma.usuarios.update({
-			where: { id: id},
-			data: {
-				estatus: false,
-				fechaActualizacion: new Date()
-			}
-		})
+		}else{
+			const data = await this.prisma.usuarios.update({
+				where: { id: id},
+				data: {
+					estatus: false,
+					fechaActualizacion: new Date()
+				}
+			})
 			
-		return data
+			return data
+		}
+
 	}
 
 	async chageStatusTrue(id: number): Promise<Usuarios> {
@@ -108,16 +110,18 @@ export class UsersService {
 		})
 		if(!existingUser){
 			throw new ResourceNotFoundException(`No se encontró un usuario con el id ${id}`);
+		}else{
+			const data = await this.prisma.usuarios.update({
+				where: { id: id},
+				data: {
+					estatus: true,
+					fechaActualizacion: new Date()
+				}
+			})
+
+			return data
 		}
-		const data = await this.prisma.usuarios.update({
-			where: { id: id},
-			data: {
-				estatus: true,
-				fechaActualizacion: new Date()
-			}
-		})
-			
-		return data
+
 	}
 
 	async remove(id: number) {

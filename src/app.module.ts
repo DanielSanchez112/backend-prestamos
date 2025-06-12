@@ -3,10 +3,11 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { PrismaService } from './prisma.service';
-import { EstadosModule } from './estados/estados.module';
+import { EstadosModule } from './states/estados.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule, } from '@nestjs/config';
 import { SeedModule } from './seed/seed.module';
+import { ClientsModule } from './clients/clients.module';
 
 @Module({
   imports: [
@@ -14,7 +15,8 @@ import { SeedModule } from './seed/seed.module';
     UsersModule, 
     EstadosModule,
     AuthModule,
-    SeedModule
+    SeedModule,
+    ClientsModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
