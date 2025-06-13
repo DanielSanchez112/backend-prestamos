@@ -4,6 +4,7 @@ import { UpdateClientDto } from './dto/update-client.dto';
 import { PrismaService } from 'src/prisma.service';
 import { ResourceNotFoundException } from 'src/common/exceptions/custom.exceptions';
 
+
 @Injectable()
 export class ClientsService {
   constructor(private prisma: PrismaService) {}
