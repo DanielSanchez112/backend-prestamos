@@ -8,6 +8,7 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule, } from '@nestjs/config';
 import { SeedModule } from './seed/seed.module';
 import { ClientsModule } from './clients/clients.module';
+import { LoansModule } from './loans/loans.module';
 
 @Module({
   imports: [
@@ -16,7 +17,8 @@ import { ClientsModule } from './clients/clients.module';
     EstadosModule,
     AuthModule,
     SeedModule,
-    ClientsModule
+    ClientsModule,
+    LoansModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
