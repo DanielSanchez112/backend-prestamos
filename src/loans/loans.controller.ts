@@ -2,32 +2,65 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { LoansService } from './loans.service';
 import { CreateLoanDto } from './dto/create-loan.dto';
 import { UpdateLoanDto } from './dto/update-loan.dto';
+import { ApiResponse, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Loans')
 @Controller('loans')
 export class LoansController {
   constructor(private readonly loansService: LoansService) {}
 
   @Post()
+  @ApiResponse({ status: 201, description: 'The record has been created.' })
+  @ApiResponse({ status: 403, description: 'The record has been forbbiden.' })
+  @ApiResponse({ status: 409, description: 'Conflict of existence.' })
   create(@Body() createLoanDto: CreateLoanDto) {
     return this.loansService.create(createLoanDto);
   }
 
   @Get()
+  @ApiResponse({ status: 200, description: 'The records have been successfully retrieved.' })
+  @ApiResponse({ status: 404, description: 'No records found.' })
+  @ApiResponse({ status: 403, description: 'The records have been forbbiden.' })
   findAll() {
     return this.loansService.findAll();
   }
 
   @Get(':id')
+  @ApiResponse({ status: 200, description: 'The record has been successfully retrieved.' })
+  @ApiResponse({ status: 404, description: 'No record found.' })
+  @ApiResponse({ status: 403, description: 'The record has been forbbiden.' })
   findOne(@Param('id') id: string) {
     return this.loansService.findOne(+id);
   }
 
   @Patch(':id')
+  @ApiResponse({ status: 200, description: 'The record has been successfully updated.' })
+  @ApiResponse({ status: 404, description: 'No record found.' })
+  @ApiResponse({ status: 403, description: 'The record has been forbbiden.' })
   update(@Param('id') id: string, @Body() updateLoanDto: UpdateLoanDto) {
     return this.loansService.update(+id, updateLoanDto);
   }
 
+  @Patch(':id/activateStatus')
+  @ApiResponse({ status: 200, description: 'The status has been successfully updated to active.' })
+  @ApiResponse({ status: 404, description: 'No record found.' })
+  @ApiResponse({ status: 403, description: 'The record has been forbbiden.' })
+  updateStatusUp(@Param('id') id: string) {
+    return this.loansService.changeStatusTrue(+id);
+  }
+
+  @Patch(':id/deactivateStatus')
+  @ApiResponse({ status: 200, description: 'The status has been successfully updated to inactive.' })
+  @ApiResponse({ status: 404, description: 'No record found.' })
+  @ApiResponse({ status: 403, description: 'The record has been forbbiden.' })
+  updateStatusDown(@Param('id') id: string) {
+    return this.loansService.changeStatusFalse(+id);
+  }
+
   @Delete(':id')
+  @ApiResponse({ status: 204, description: 'The record has been successfully deleted.' })
+  @ApiResponse({ status: 404, description: 'No record found.' })
+  @ApiResponse({ status: 403, description: 'The record has been forbbiden.' })
   remove(@Param('id') id: string) {
     return this.loansService.remove(+id);
   }

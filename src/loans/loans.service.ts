@@ -1,26 +1,137 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateLoanDto } from './dto/create-loan.dto';
 import { UpdateLoanDto } from './dto/update-loan.dto';
+import { PrismaService } from 'src/prisma.service';
+import { ResourceNotFoundException } from 'src/common/exceptions/custom.exceptions';
 
 @Injectable()
 export class LoansService {
-  create(createLoanDto: CreateLoanDto) {
-    return 'This action adds a new loan';
+  constructor(private prisma: PrismaService){}
+
+  async create(createLoanDto: CreateLoanDto){
+    const existingLoan = await this.prisma.prestamos.findFirst({
+      where: {
+        idCliente: createLoanDto.idCliente
+      }
+    })
+
+    if(existingLoan){
+      throw new ConflictException(`Ya existe un préstamo para el cliente con ID ${createLoanDto.idCliente}`);
+    } else {
+      const data = await this.prisma.prestamos.create({
+        data: createLoanDto
+      });
+      return data;
+    }
   }
 
-  findAll() {
-    return `This action returns all loans`;
+  async findAll() {
+    const data = await this.prisma.prestamos.findMany({
+      where: { status: true},
+      orderBy: { fechaInicio: 'asc' }
+    })
+    if (!data || data.length === 0) {
+      throw new ResourceNotFoundException('No se encontraron préstamos activos');
+    } else {
+      return data;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} loan`;
+  async findOne(id: number) {
+    const data = await this.prisma.prestamos.findUnique({
+      where: { id: id}
+    })
+    if (!data) {
+      throw new ResourceNotFoundException(`No se encontró un préstamo con el ID ${id}`);
+    } else {
+      return data;
+    }
   }
 
-  update(id: number, updateLoanDto: UpdateLoanDto) {
-    return `This action updates a #${id} loan`;
+  async update(id: number, updateLoanDto: UpdateLoanDto) {
+    const existingLoan = await this.prisma.prestamos.findUnique({
+      where: { id: id}
+    })
+    if (!existingLoan) {
+      throw new ResourceNotFoundException(`No se encontró un préstamo con el ID ${id}`);
+    }
+    const data = await this.prisma.prestamos.update({
+      where: { id: id},
+      data: updateLoanDto
+    })
+    if (!data) {
+      throw new ResourceNotFoundException(`No se pudo actualizar el préstamo con el ID ${id}`);
+    } else {
+      return data;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} loan`;
+  async remove(id: number) {
+    const existingLoan = await this.prisma.prestamos.findUnique({
+      where: { id: id }
+    })
+    if (!existingLoan) {
+      throw new ResourceNotFoundException(`No se encontró un préstamo con el ID ${id}`);
+    }else{
+      const data = await this.prisma.prestamos.delete({
+        where: { id: id }
+      })
+    }
+  }
+
+  async changeStatusFalse(id: number) {
+    const exisitingClient = await this.prisma.prestamos.findUnique({
+      where: { id: id }
+    })
+    if(!exisitingClient){
+      throw new ResourceNotFoundException(`No se encontró un cliente con el id ${id}`);
+    }else{
+      const data = await this.prisma.clientes.update({
+        where: {id: id },
+        data: {
+          estatus: false
+        }
+      })
+      return data
+    }
+  }
+
+  async changeStatusTrue(id: number) {
+    const exisitingClient = await this.prisma.prestamos.findUnique({
+      where: { id: id }
+    })
+    if(!exisitingClient){
+      throw new ResourceNotFoundException(`No se encontró un cliente con el id ${id}`);
+    }else{
+      const data = await this.prisma.clientes.update({
+        where: {id: id },
+        data: {
+          estatus: true
+        }
+      })
+      return data
+    }
+  }
+
+  async findByClientId(idCliente: number){
+    const data = await this.prisma.prestamos.findFirst({
+      where: { idCliente: idCliente}
+    })
+    if (!data) {
+      throw new ResourceNotFoundException(`No se encontró un préstamo para el cliente con ID ${idCliente}`);
+    } else {
+      return data;
+    }
+  }
+
+  async findByUsuarioId(idUsuario: number) {
+    const data = await this.prisma.prestamos.findMany({
+      where: { idUsuario: idUsuario, status: true }
+    })
+    if (!data || data.length === 0) {
+      throw new ResourceNotFoundException(`No se encontraron préstamos activos para el usuario con ID ${idUsuario}`);
+    } else {
+      return data;
+    }
   }
 }
