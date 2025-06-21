@@ -9,6 +9,7 @@ import { ConfigModule, } from '@nestjs/config';
 import { SeedModule } from './seed/seed.module';
 import { ClientsModule } from './clients/clients.module';
 import { LoansModule } from './loans/loans.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -18,7 +19,8 @@ import { LoansModule } from './loans/loans.module';
     AuthModule,
     SeedModule,
     ClientsModule,
-    LoansModule
+    LoansModule,
+    PaymentModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],

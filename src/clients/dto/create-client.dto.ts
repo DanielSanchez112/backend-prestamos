@@ -74,7 +74,7 @@ export class CreateClientDto {
 
     @ApiPropertyOptional({
         description: 'Fecha de nacimiento del cliente',
-        example: '1990-01-01',
+        example: '1990-01-01T00:00:00Z',
     })
     @IsOptional()
     @IsDateString()

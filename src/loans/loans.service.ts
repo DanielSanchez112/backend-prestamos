@@ -80,16 +80,16 @@ export class LoansService {
   }
 
   async changeStatusFalse(id: number) {
-    const exisitingClient = await this.prisma.prestamos.findUnique({
+    const exisitingLoan = await this.prisma.prestamos.findUnique({
       where: { id: id }
     })
-    if(!exisitingClient){
-      throw new ResourceNotFoundException(`No se encontró un cliente con el id ${id}`);
+    if(!exisitingLoan){
+      throw new ResourceNotFoundException(`No se encontró un prestamo con el id ${id}`);
     }else{
-      const data = await this.prisma.clientes.update({
+      const data = await this.prisma.prestamos.update({
         where: {id: id },
         data: {
-          estatus: false
+          status: false
         }
       })
       return data
@@ -97,16 +97,16 @@ export class LoansService {
   }
 
   async changeStatusTrue(id: number) {
-    const exisitingClient = await this.prisma.prestamos.findUnique({
+    const exisitingLoan = await this.prisma.prestamos.findUnique({
       where: { id: id }
     })
-    if(!exisitingClient){
-      throw new ResourceNotFoundException(`No se encontró un cliente con el id ${id}`);
+    if(!exisitingLoan){
+      throw new ResourceNotFoundException(`No se encontró un prestamo con el id ${id}`);
     }else{
-      const data = await this.prisma.clientes.update({
+      const data = await this.prisma.prestamos.update({
         where: {id: id },
         data: {
-          estatus: true
+          status: true
         }
       })
       return data
