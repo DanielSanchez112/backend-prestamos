@@ -21,7 +21,14 @@
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:restart": "docker-compose restart",
-    "docker:logs": "docker-compose logs -f"
+    "docker:logs": "docker-compose logs -f",
+    "generate:certs": "node scripts/generate-certs.js",
+    "start:http": "npm run start",
+    "start:https": "npm run generate:certs && timeout 3 && npm run start",
+    "start:dev:safe": "npm run start:dev",
+    "start:dev:https": "npm run generate:certs && timeout 3 && npm run start:dev",
+    "clean:certs": "rmdir /s /q certs 2>nul || rm -rf certs",
+    "check:openssl": "openssl version"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
