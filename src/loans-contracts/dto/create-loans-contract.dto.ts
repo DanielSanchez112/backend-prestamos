@@ -25,4 +25,8 @@ export class CreateLoansContractDto {
     @IsOptional()
     @IsBoolean()
     status?: boolean;
+
+    fechaCreacion?: Date = new Date();
+
+    fechaActualizacion?: Date
 }
