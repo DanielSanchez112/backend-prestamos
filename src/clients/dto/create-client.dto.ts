@@ -80,6 +80,22 @@ export class CreateClientDto {
     @IsDateString()
     fechaNacimiento?: Date;
 
+    @ApiPropertyOptional({
+        description: 'Correo electrónico del cliente',
+        example: 'juan.perez@email.com',
+    })
+    @IsOptional()
+    @IsString()
+    correo?: string;
+
+    @ApiPropertyOptional({
+        description: 'Teléfono del cliente',
+        example: '5551234567',
+    })
+    @IsOptional()
+    @IsString()
+    telefono?: string;
+
     @ApiProperty({
         description: 'Estatus del cliente (activo/inactivo)',
         example: true,

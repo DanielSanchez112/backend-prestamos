@@ -29,6 +29,10 @@ model Clientes {
   comprobanteDomicilio String?      @map("COMPROBANTE_DOMICILIO")
   curp                 String?      @map("CURP")
   fechaNacimiento      DateTime?    @map("FECHA_NACIMIENTO")
+  correo               String?      @map("CORREO")
+  telefono             String?      @map("TELEFONO")
+  fechaCreacion        DateTime?    @map("FECHA_CREACION")
+  fechaActualizacion   DateTime?    @map("FECHA_ACTUALIZACION")
   estatus              Boolean?     @map("ESTATUS")
   direccion            Direcciones? @relation(fields: [idDireccion], references: [id], onDelete: Cascade)
   usuario              Usuarios?    @relation(fields: [idUsuario], references: [id], onDelete: Cascade)
@@ -42,6 +46,8 @@ model Contratos {
   idPrestamos Int?       @map("ID_PRESTAMOS")
   url         String?    @map("URL")
   status      Boolean?   @map("STATUS")
+  fechaCreacion DateTime? @map("FECHA_CREACION")
+  fechaActualizacion DateTime? @map("FECHA_ACTUALIZACION")
   prestamo    Prestamos? @relation(fields: [idPrestamos], references: [id], onDelete: Cascade)
 
   @@map("CONTRATOS")
@@ -131,6 +137,8 @@ model Prestamos {
   fechaFin      DateTime?   @map("FECHA_FIN")
   tasa          Float?      @map("TASA")
   status        Boolean?    @map("STATUS")
+  fechaCreacion DateTime?   @map("FECHA_CREACION")
+  fechaActualizacion DateTime? @map("FECHA_ACTUALIZACION")
   contratos     Contratos[]
   pagos         Pagos[]
   cliente       Clientes?   @relation(fields: [idCliente], references: [id], onDelete: Cascade)

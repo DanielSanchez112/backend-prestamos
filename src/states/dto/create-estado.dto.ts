@@ -1,15 +1,11 @@
-import { IsOptional ,IsString} from 'class-validator'
-import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger'
-
+import { IsString } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateEstadoDto {
-
-    @ApiProperty()
-    @IsOptional()
-    @IsString()
-        @ApiPropertyOptional({
-        description: 'Optional field for email, can be used for updates',
+    @ApiProperty({
+        description: 'Nombre del estado',
         example: 'Tabasco'
     })
-    nombre: string
+    @IsString()
+    nombre: string;
 }

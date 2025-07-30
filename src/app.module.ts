@@ -10,6 +10,9 @@ import { SeedModule } from './seed/seed.module';
 import { ClientsModule } from './clients/clients.module';
 import { LoansModule } from './loans/loans.module';
 import { PaymentModule } from './payment/payment.module';
+import { ContractsModule } from './contracts/contracts.module';
+import { LoansContractsModule } from './loans-contracts/loans-contracts.module';
+import { PaymentMethodsModule } from './payment-methods/payment-methods.module';
 
 @Module({
   imports: [
@@ -20,7 +23,10 @@ import { PaymentModule } from './payment/payment.module';
     SeedModule,
     ClientsModule,
     LoansModule,
-    PaymentModule
+    PaymentModule,
+    ContractsModule,
+    LoansContractsModule,
+    PaymentMethodsModule
   ],
   controllers: [AppController],
   providers: [AppService, PrismaService],
